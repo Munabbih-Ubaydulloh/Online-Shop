@@ -28,6 +28,7 @@ INSTALLED_APPS = [
 
     'rest_framework',
     'corsheaders',
+    'rest_framework_simplejwt.token_blacklist'
 
 ]
 
@@ -64,12 +65,8 @@ WSGI_APPLICATION = 'config.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME' : 'online_shop',
-        "USER" : "munabbih-ubaydulloh",
-        "PASSWORD" : config("DB_PASS"),
-        "HOST" : "localhost",
-        "PORT" : 5432
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME' : BASE_DIR / "db.sqlite3"
     }
 }
 
@@ -110,6 +107,16 @@ AUTH_USER_MODEL = 'accounts.User'
 
 CORS_ALLOW_ALL_ORIGINS = True
 
-# CORS_ALLOWED_ORIGINS  = [
-#         "localhost:3000"
-# ]
+
+REST_FRAMEWORK = {
+    "NON_FIELD_ERRORS_KEY" : "error",
+    "DEFAULT_AUTHENTICATION_CLASSES" : ["rest_framework_simplejwt.authentication.JWTAuthentication"],
+    "DEFAULT_PERMISSION_CLASSES" : "rest_framework.permissions.IsAuthenticated",
+}
+from datetime import timedelta
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME' : timedelta(days=2),
+    'REFRESH_TOKEN_LIFETIME' : timedelta(days=30),
+    'ROTATE_REFRESH_TOKENS': True,
+    'BLACKLIST_AFTER_ROTATION': True,
+}
